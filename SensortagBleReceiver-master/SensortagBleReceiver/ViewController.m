@@ -19,14 +19,13 @@
 
 @implementation ViewController
 
-NSString *UUID_KEY = @"CC2650 SensorTag";
+NSString *UUID_KEY = @"Project Zero";
 NSString *UUID = @"";
 int accRange = 0;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     eventState = true;
-    accRange = ACC_RANGE_4G;
     // Do any additional setup after loading the view, typically from a nib.
     _myCentralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     
@@ -46,7 +45,6 @@ int accRange = 0;
         NSLog(@"CoreBluetooth BLE hardware is powered off");
     }else if([central state] == CBCentralManagerStatePoweredOn){
         NSLog(@"CoreBluetooth BLE hardware is powered on");
-        //NSArray *services = @[[CBUUID UUIDWithString:SENSORTAG_SERVICE_UUID]];
         [central scanForPeripheralsWithServices:nil options:nil];
     }else if([central state] == CBCentralManagerStateUnauthorized){
         NSLog(@"CoreBluetooth BLE hardware is unauthorized");
@@ -70,7 +68,7 @@ int accRange = 0;
     NSLog(@"%@", peripheral);
     _peripheralDevice = peripheral;
     _peripheralDevice.delegate = self;
-    if([peripheral.name isEqualToString:@"Project Zero"])
+    if([peripheral.name isEqualToString:UUID_KEY])
         [_myCentralManager connectPeripheral:_peripheralDevice options:nil];
     
 }
@@ -105,12 +103,12 @@ int accRange = 0;
     for (CBCharacteristic *characteristic in service.characteristics) {
         NSLog(@"Discovered characteristic %@", characteristic);
         NSLog(@"This is the %@", characteristic.UUID);
-        if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON0]]){
-            //[peripheral readValueForCharacteristic:characteristic];
+        if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON1]]){
+            [peripheral readValueForCharacteristic:characteristic];
             [peripheral setNotifyValue:YES forCharacteristic:characteristic];
-        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON1]]){
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON2]]){
+            [peripheral readValueForCharacteristic:characteristic];
             [peripheral setNotifyValue:YES forCharacteristic:characteristic];
-            //[peripheral readValueForCharacteristic:characteristic];
         }
     }
 }
@@ -131,12 +129,12 @@ int accRange = 0;
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error
 {
-    if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON1]]){
-        [self getMotionData:characteristic.value];
-        NSLog(@"BUTTON 1 GETTING");
-    } else if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON0]]){
-        [self getHumidityData:characteristic.value];
-        NSLog(@"BUTTON 0 GETTING %@", characteristic.value);
+    if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON2]]){
+        [self getButton2Data:characteristic.value];
+        NSLog(@"BUTTON 2 GETTING %@", characteristic.value);
+    } else if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON1]]){
+        [self getButton1Data:characteristic.value];
+        NSLog(@"BUTTON 1 GETTING %@", characteristic.value);
     }
     
     if (error) {
@@ -150,20 +148,18 @@ int accRange = 0;
 
 
 
-- (void) getHumidityData:(NSData *)data{
+- (void) getButton1Data:(NSData *)data{
     const Byte *orgBytes = [data bytes];
     int16_t hum = *orgBytes;
     _tagHum = [[NSNumber alloc] initWithFloat:hum];
-    NSLog(@"Getting there");
     [_humLabel setText:[_tagHum stringValue]];
 }
 
-- (void) getMotionData:(NSData *) data
+- (void) getButton2Data:(NSData *) data
 {
     const Byte *orgBytes = [data bytes];
     int16_t hum = *orgBytes;
     _tagHum = [[NSNumber alloc] initWithFloat:hum];
-    NSLog(@"Getting there2");
     [_objTempLabel setText:[_tagHum stringValue]];
 }
 
