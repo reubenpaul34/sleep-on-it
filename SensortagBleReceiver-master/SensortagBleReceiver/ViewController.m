@@ -68,9 +68,10 @@ int accRange = 0;
     NSLog(@"%@", peripheral);
     _peripheralDevice = peripheral;
     _peripheralDevice.delegate = self;
-    if([peripheral.name isEqualToString:UUID_KEY])
+    if([peripheral.name isEqualToString:@"Project Zero"]){
+        NSLog(@"LOOK HERE");
         [_myCentralManager connectPeripheral:_peripheralDevice options:nil];
-    
+    }
 }
 
 
