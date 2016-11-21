@@ -45,8 +45,8 @@ int accRange = 0;
         NSLog(@"CoreBluetooth BLE hardware is powered off");
     }else if([central state] == CBCentralManagerStatePoweredOn){
         NSLog(@"CoreBluetooth BLE hardware is powered on");
-        NSArray *services = @[[CBUUID UUIDWithString:UUID_SERV_1], [CBUUID UUIDWithString:UUID_SERV_2],[CBUUID UUIDWithString:UUID_SERV_3],[CBUUID UUIDWithString:UUID_SERV_4]];
-        [central scanForPeripheralsWithServices:services options:nil];
+        NSArray *services = @[[CBUUID UUIDWithString:UUID_SERV_2],[CBUUID UUIDWithString:UUID_SERV_3],[CBUUID UUIDWithString:UUID_SERV_4]];
+        [central scanForPeripheralsWithServices:nil options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber  numberWithBool:YES], CBCentralManagerScanOptionAllowDuplicatesKey, nil]];
     }else if([central state] == CBCentralManagerStateUnauthorized){
         NSLog(@"CoreBluetooth BLE hardware is unauthorized");
     }else if([central state] == CBCentralManagerStateUnknown){
@@ -71,6 +71,7 @@ int accRange = 0;
     _peripheralDevice.delegate = self;
     if([peripheral.name isEqualToString:@"Project Zero"]){
         NSLog(@"LOOK HERE");
+        [central stopScan];
         [_myCentralManager connectPeripheral:_peripheralDevice options:nil];
     }
 }
@@ -83,7 +84,6 @@ int accRange = 0;
     NSLog(@"Peripheral connected");
     peripheral.delegate = self;
     [peripheral discoverServices:nil];
-    [central stopScan];
 }
 
 - (void) centralManager:(CBCentralManager *) central
