@@ -45,7 +45,8 @@ int accRange = 0;
         NSLog(@"CoreBluetooth BLE hardware is powered off");
     }else if([central state] == CBCentralManagerStatePoweredOn){
         NSLog(@"CoreBluetooth BLE hardware is powered on");
-        [central scanForPeripheralsWithServices:nil options:nil];
+        NSArray *services = @[[CBUUID UUIDWithString:UUID_SERV_1], [CBUUID UUIDWithString:UUID_SERV_2],[CBUUID UUIDWithString:UUID_SERV_3],[CBUUID UUIDWithString:UUID_SERV_4]];
+        [central scanForPeripheralsWithServices:services options:nil];
     }else if([central state] == CBCentralManagerStateUnauthorized){
         NSLog(@"CoreBluetooth BLE hardware is unauthorized");
     }else if([central state] == CBCentralManagerStateUnknown){
@@ -83,6 +84,11 @@ int accRange = 0;
     peripheral.delegate = self;
     [peripheral discoverServices:nil];
     [central stopScan];
+}
+
+- (void) centralManager:(CBCentralManager *) central
+didFailToConnectPeripheral:(NSError*)error{
+    NSLog(@"FAIlED TO CONNECT");
 }
 
 
