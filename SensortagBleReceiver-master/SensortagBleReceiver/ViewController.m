@@ -45,8 +45,8 @@ int accRange = 0;
         NSLog(@"CoreBluetooth BLE hardware is powered off");
     }else if([central state] == CBCentralManagerStatePoweredOn){
         NSLog(@"CoreBluetooth BLE hardware is powered on");
-        NSArray *services = @[[CBUUID UUIDWithString:UUID_SERV_2],[CBUUID UUIDWithString:UUID_SERV_3],[CBUUID UUIDWithString:UUID_SERV_4]];
         [central scanForPeripheralsWithServices:nil options:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber  numberWithBool:YES], CBCentralManagerScanOptionAllowDuplicatesKey, nil]];
+        
     }else if([central state] == CBCentralManagerStateUnauthorized){
         NSLog(@"CoreBluetooth BLE hardware is unauthorized");
     }else if([central state] == CBCentralManagerStateUnknown){
@@ -67,13 +67,19 @@ int accRange = 0;
     NSLog(@"Discovered %@", peripheral.name);
     NSLog(@"UUID %@", peripheral.identifier);
     NSLog(@"%@", peripheral);
-    _peripheralDevice = peripheral;
-    _peripheralDevice.delegate = self;
-    if([peripheral.name isEqualToString:@"Project Zero"]){
-        NSLog(@"LOOK HERE");
+    if([peripheral.name isEqualToString:@"Accelerometer"]){
+        _peripheralDevice_1 = peripheral;
+        _peripheralDevice_1.delegate = self;
         [central stopScan];
-        [_myCentralManager connectPeripheral:_peripheralDevice options:nil];
+        [_myCentralManager connectPeripheral:_peripheralDevice_1 options:nil];
     }
+    else if([peripheral.name isEqualToString:@"Project Zero"]){
+        _peripheralDevice_2 = peripheral;
+        _peripheralDevice_2.delegate = self;
+        [central stopScan];
+        [_myCentralManager connectPeripheral:_peripheralDevice_2 options:nil];
+    }
+    
 }
 
 
@@ -110,10 +116,10 @@ didFailToConnectPeripheral:(NSError*)error{
     for (CBCharacteristic *characteristic in service.characteristics) {
         NSLog(@"Discovered characteristic %@", characteristic);
         NSLog(@"This is the %@", characteristic.UUID);
-        if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON1]]){
+        if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON1]] || [characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCEL_SIGN]]){
             [peripheral readValueForCharacteristic:characteristic];
             [peripheral setNotifyValue:YES forCharacteristic:characteristic];
-        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON2]]){
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON2]] || [characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCEL_VALUE]]){
             [peripheral readValueForCharacteristic:characteristic];
             [peripheral setNotifyValue:YES forCharacteristic:characteristic];
         }
@@ -165,10 +171,11 @@ didFailToConnectPeripheral:(NSError*)error{
 - (void) getButton2Data:(NSData *) data
 {
     const Byte *orgBytes = [data bytes];
-    int16_t hum = *orgBytes;
+    double hum = *orgBytes*10.1;
+    NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
+    [fmt setPositiveFormat:@"0.##"];
     _tagHum = [[NSNumber alloc] initWithFloat:hum];
-    [_objTempLabel setText:[_tagHum stringValue]];
+    [_objTempLabel setText:[NSString stringWithFormat:@"%.2f G", hum]];
 }
-
 
 @end

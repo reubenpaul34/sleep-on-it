@@ -15,6 +15,7 @@
 		16A2C38C1B9A86DE00D19190 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16A2C38A1B9A86DE00D19190 /* LaunchScreen.xib */; };
 		16A2C3981B9A86DE00D19190 /* SensortagBleReceiverTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 16A2C3971B9A86DE00D19190 /* SensortagBleReceiverTests.m */; };
 		16A2C3A21B9A872F00D19190 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16A2C3A11B9A872F00D19190 /* CoreBluetooth.framework */; };
+		ADC92FE71DE3CB4B001E3A77 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADC92FE51DE3CB4B001E3A77 /* Main_iPad.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		16A2C3961B9A86DE00D19190 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16A2C3971B9A86DE00D19190 /* SensortagBleReceiverTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SensortagBleReceiverTests.m; sourceTree = "<group>"; };
 		16A2C3A11B9A872F00D19190 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		ADC92FE61DE3CB4B001E3A77 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,7 @@
 				16A2C3821B9A86DE00D19190 /* ViewController.h */,
 				16A2C3831B9A86DE00D19190 /* ViewController.m */,
 				16A2C3851B9A86DE00D19190 /* Main.storyboard */,
+				ADC92FE51DE3CB4B001E3A77 /* Main_iPad.storyboard */,
 				16A2C3881B9A86DE00D19190 /* Images.xcassets */,
 				16A2C38A1B9A86DE00D19190 /* LaunchScreen.xib */,
 				16A2C37B1B9A86DE00D19190 /* Supporting Files */,
@@ -205,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16A2C3871B9A86DE00D19190 /* Main.storyboard in Resources */,
+				ADC92FE71DE3CB4B001E3A77 /* Main_iPad.storyboard in Resources */,
 				16A2C38C1B9A86DE00D19190 /* LaunchScreen.xib in Resources */,
 				16A2C3891B9A86DE00D19190 /* Images.xcassets in Resources */,
 			);
@@ -263,6 +267,14 @@
 				16A2C38B1B9A86DE00D19190 /* Base */,
 			);
 			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+		ADC92FE51DE3CB4B001E3A77 /* Main_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ADC92FE61DE3CB4B001E3A77 /* Base */,
+			);
+			name = Main_iPad.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
