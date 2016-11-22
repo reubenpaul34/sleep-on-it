@@ -35,7 +35,8 @@
 
 
 
-@property (nonatomic, strong) NSNumber *tagHum;
+@property (nonatomic, strong) NSNumber *tagButton1;
+@property (nonatomic, strong) NSNumber *tagButton2;
 
 
 
@@ -47,6 +48,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *objTempLabel;
 @property (weak, nonatomic) IBOutlet UILabel *ambTempLabel;
 
+@property (weak, nonatomic) IBOutlet UILabel *accelZLabel;
+@property (weak, nonatomic) IBOutlet UILabel *accelZValue;
+@property (weak, nonatomic) IBOutlet UILabel *connectedStatusLabel;
 
 
 @end

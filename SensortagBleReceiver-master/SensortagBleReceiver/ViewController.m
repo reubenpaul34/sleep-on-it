@@ -90,6 +90,7 @@ int accRange = 0;
     NSLog(@"Peripheral connected");
     peripheral.delegate = self;
     [peripheral discoverServices:nil];
+    [_connectedStatusLabel setText:[NSString stringWithFormat:@"Connected to %@", peripheral.name]];
 }
 
 - (void) centralManager:(CBCentralManager *) central
@@ -144,10 +145,8 @@ didFailToConnectPeripheral:(NSError*)error{
 {
     if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON2]]){
         [self getButton2Data:characteristic.value];
-        NSLog(@"BUTTON 2 GETTING %@", characteristic.value);
     } else if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON1]]){
         [self getButton1Data:characteristic.value];
-        NSLog(@"BUTTON 1 GETTING %@", characteristic.value);
     }
     
     if (error) {
@@ -164,17 +163,18 @@ didFailToConnectPeripheral:(NSError*)error{
 - (void) getButton1Data:(NSData *)data{
     const Byte *orgBytes = [data bytes];
     int16_t hum = *orgBytes;
-    _tagHum = [[NSNumber alloc] initWithFloat:hum];
-    [_humLabel setText:[_tagHum stringValue]];
+    _tagButton1 = [[NSNumber alloc] initWithFloat:hum];
+    [_humLabel setText:[_tagButton1 stringValue]];
 }
 
 - (void) getButton2Data:(NSData *) data
 {
     const Byte *orgBytes = [data bytes];
     double hum = *orgBytes*10.1;
-    NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
-    [fmt setPositiveFormat:@"0.##"];
-    _tagHum = [[NSNumber alloc] initWithFloat:hum];
+    if([_tagButton1 isEqual:@1]){
+        hum = hum*-1;
+    }
+    _tagButton2 = [[NSNumber alloc] initWithFloat:hum];
     [_objTempLabel setText:[NSString stringWithFormat:@"%.2f G", hum]];
 }
 
