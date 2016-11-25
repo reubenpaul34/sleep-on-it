@@ -117,16 +117,36 @@ didFailToConnectPeripheral:(NSError*)error{
     for (CBCharacteristic *characteristic in service.characteristics) {
         NSLog(@"Discovered characteristic %@", characteristic);
         NSLog(@"This is the %@", characteristic.UUID);
-        if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON1]] || [characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCEL_SIGN]]){
-            [peripheral readValueForCharacteristic:characteristic];
+        if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON1]] || [characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCELX_SIGN]]){
+            //[peripheral readValueForCharacteristic:characteristic];
             [peripheral setNotifyValue:YES forCharacteristic:characteristic];
-        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON2]] || [characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCEL_VALUE]]){
-            [peripheral readValueForCharacteristic:characteristic];
+        } else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON2]] || [characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCELX_VALUE]]){
+            //[peripheral readValueForCharacteristic:characteristic];
             [peripheral setNotifyValue:YES forCharacteristic:characteristic];
+            
         }
+        else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCELY_VALUE]]){
+            //[peripheral readValueForCharacteristic:characteristic];
+            [peripheral setNotifyValue:YES forCharacteristic:characteristic];
+            
+        }
+        else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCELY_SIGN]]){
+            //[peripheral readValueForCharacteristic:characteristic];
+            [peripheral setNotifyValue:YES forCharacteristic:characteristic];
+            
+        }
+        else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCELZ_VALUE]]){
+            //[peripheral readValueForCharacteristic:characteristic];
+            [peripheral setNotifyValue:YES forCharacteristic:characteristic];
+            
+        }
+        else if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCELZ_SIGN]]){
+            //[peripheral readValueForCharacteristic:characteristic];
+            [peripheral setNotifyValue:YES forCharacteristic:characteristic];
+                                       
+    }
     }
 }
-
 
 
 - (CBCharacteristic *) getCharateristicWithUUID:(NSString *)uuid from:(CBService *) cbService
@@ -143,11 +163,23 @@ didFailToConnectPeripheral:(NSError*)error{
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error
 {
-    if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON2]]){
-        [self getButton2Data:characteristic.value];
-    } else if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_BUTTON1]]){
-        [self getButton1Data:characteristic.value];
+    if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCELX_VALUE]]){
+        [self getAccelXValueData:characteristic.value];
+    }   else if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCELX_SIGN]]){
+        [self getAccelXValueSign:characteristic.value];
     }
+        else if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCELY_VALUE]]){
+        [self getAccelYValueData:characteristic.value];
+    }
+        else if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCELY_SIGN]]){
+        [self getAccelYValueSign:characteristic.value];
+    }
+        else if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCELZ_VALUE]]){
+        [self getAccelZValueData:characteristic.value];
+    }
+        else if([characteristic.UUID isEqual:[CBUUID UUIDWithString:UUID_ACCELZ_SIGN]]){
+            [self getAccelZValueSign:characteristic.value];
+        }
     
     if (error) {
         
@@ -160,22 +192,61 @@ didFailToConnectPeripheral:(NSError*)error{
 
 
 
-- (void) getButton1Data:(NSData *)data{
+- (void) getAccelXValueSign:(NSData *)data{
     const Byte *orgBytes = [data bytes];
     int16_t hum = *orgBytes;
-    _tagButton1 = [[NSNumber alloc] initWithFloat:hum];
-    [_humLabel setText:[_tagButton1 stringValue]];
+    _tagAccelXSign = [[NSNumber alloc] initWithFloat:hum];
+    [_accelXSignValue setText:[_tagAccelXSign stringValue]];
 }
 
-- (void) getButton2Data:(NSData *) data
+// GET BUTTON2DATA also gets accel X value
+- (void) getAccelXValueData:(NSData *) data
 {
     const Byte *orgBytes = [data bytes];
     double hum = *orgBytes*10.1;
-    if([_tagButton1 isEqual:@1]){
+    if([_tagAccelXSign isEqual:@1]){
         hum = hum*-1;
     }
-    _tagButton2 = [[NSNumber alloc] initWithFloat:hum];
-    [_objTempLabel setText:[NSString stringWithFormat:@"%.2f G", hum]];
+    _tagAccelXValue = [[NSNumber alloc] initWithFloat:hum];
+    [_accelXValue setText:[NSString stringWithFormat:@"%.2f G", hum]];
+}
+
+- (void) getAccelYValueSign:(NSData *) data
+{
+    const Byte *orgBytes = [data bytes];
+    int16_t hum = *orgBytes;
+    _tagAccelYSign = [[NSNumber alloc] initWithFloat:hum];
+    [_accelYSignValue setText:[_tagAccelYSign stringValue]];
+}
+
+- (void) getAccelYValueData:(NSData *) data
+{
+    const Byte *orgBytes = [data bytes];
+    double hum = *orgBytes*10.1;
+    if([_tagAccelYSign isEqual:@1]){
+        hum = hum*-1;
+    }
+    _tagAccelYValue = [[NSNumber alloc] initWithFloat:hum];
+    [_accelYValue setText:[NSString stringWithFormat:@"%.2f G", hum]];
+}
+
+- (void) getAccelZValueData:(NSData *) data
+{
+    const Byte *orgBytes = [data bytes];
+    int16_t hum = *orgBytes;
+    _tagAccelZSign = [[NSNumber alloc] initWithFloat:hum];
+    [_accelZSignValue setText:[_tagAccelZSign stringValue]];
+}
+
+- (void) getAccelZValueSign:(NSData *) data
+{
+    const Byte *orgBytes = [data bytes];
+    double hum = *orgBytes*10.1;
+    if([_tagAccelZSign isEqual:@1]){
+        hum = hum*-1;
+    }
+    _tagAccelZValue = [[NSNumber alloc] initWithFloat:hum];
+    [_accelZValue setText:[NSString stringWithFormat:@"%.2f G", hum]];
 }
 
 @end
